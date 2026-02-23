@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - Premium E-Commerce</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f1f4f;
+            --secondary: #1a2d5a;
+            --light: #f5f7fa;
+            --text: #333;
+            --border: #e0e0e0;
+            --danger: #d32f2f;
+        }
+        body { background: #fff; color: var(--text); font-family: 'Segoe UI', sans-serif; }
+        .nav-top { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .nav-top a { color: white; text-decoration: none; font-weight: 500; }
+        .container-wrapper { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+        .wishlist-header { margin-bottom: 30px; }
+        .wishlist-header h1 { font-size: 32px; font-weight: 700; color: var(--primary); }
+        .wishlist-item { background: white; padding: 20px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; display: grid; grid-template-columns: 150px 1fr auto; gap: 20px; align-items: center; }
+        .item-image { width: 150px; height: 150px; object-fit: cover; border-radius: 8px; background: var(--light); }
+        .item-info h3 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .item-price { font-size: 22px; font-weight: 700; color: var(--danger); margin: 8px 0; }
+        .item-brand { font-size: 13px; color: #888; margin-bottom: 12px; }
+        .btn-action { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s; }
+        .btn-cart { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; }
+        .btn-cart:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(15, 31, 79, 0.3); }
+        .btn-remove { background: #ffe5e5; color: var(--danger); }
+        .btn-remove:hover { background: var(--danger); color: white; }
+        .action-group { display: flex; gap: 10px; flex-direction: column; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #888; }
+        .empty-state i { font-size: 64px; margin-bottom: 20px; opacity: 0.5; }
+        .summary-card { background: var(--light); padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        @media (max-width: 768px) { .wishlist-item { grid-template-columns: 100px 1fr; } .item-image { width: 100px; height: 100px; } .action-group { flex-direction: row; } }
+    </style>
+</head>
+<body>
+    <div class="nav-top">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="{% url 'home' %}"><i class="fas fa-arrow-left"></i> Home</a>
+            <div style="display: flex; gap: 20px;">
+                <a href="{% url 'product_list' %}"><i class="fas fa-search"></i> Browse</a>
+                <a href="{% url 'cart_view_new' %}"><i class="fas fa-shopping-cart"></i> Cart</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'customer_dashboard' %}"><i class="fas fa-user"></i> Account</a>
+                {% else %}
+                    <a href="{% url 'auth' %}"><i class="fas fa-user"></i> Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-wrapper">
+        <div class="wishlist-header">
+            <h1><i class="fas fa-heart"></i> My Wishlist</h1>
+            <p style="color: #666;">Save your favorite items for later</p>
+        </div>
+        
+        {% if wishlist_items %}
+            {% for item in wishlist_items %}
+            <div class="wishlist-item">
+                <img src="{{ item.product.image_url }}" alt="{{ item.product.title }}" class="item-image">
+                
+                <div class="item-info">
+                    <div class="item-brand">{{ item.product.brand }}</div>
+                    <h3>{{ item.product.title }}</h3>
+                    <div class="item-price">₹{{ item.product.price }}</div>
+                    <div style="font-size: 13px; color: #888;">
+                        {% if item.product.in_stock %}
+                            <span style="color: #2ecc71;"><i class="fas fa-check-circle"></i> In Stock</span>
+                        {% else %}
+                            <span style="color: var(--danger);"><i class="fas fa-times-circle"></i> Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="action-group">
+                    <button class="btn-action btn-cart" onclick="moveToCart({{ item.product.id }})">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <button class="btn-action btn-remove" onclick="removeItem({{ item.product.id }})">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="summary-card">
+                <div style="font-weight: 600; color: var(--primary); margin-bottom: 15px;">Summary</div>
+                <div class="summary-row">
+                    <span>Total Items:</span>
+                    <strong>{{ total_items }}</strong>
+                </div>
+                <div class="summary-row" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px;">
+                    <span style="font-size: 18px; font-weight: 600;">Total Value:</span>
+                    <strong style="color: var(--danger); font-size: 18px;">₹{{ total_price }}</strong>
+                </div>
+                <button onclick="window.location.href='{% url 'cart_view_new' %}'" style="width: 100%; margin-top: 15px; padding: 12px; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-shopping-cart"></i> Continue Shopping
+                </button>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-heart-broken"></i>
+                <p style="font-size: 18px; font-weight: 600;">Your wishlist is empty</p>
+                <p>Start adding your favorite products to your wishlist!</p>
+                <button onclick="window.location.href='{% url 'product_list' %}'" style="margin-top: 20px; padding: 12px 30px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-search"></i> Browse Products
+                </button>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        function moveToCart(productId) {
+            fetch(`/wishlist/move-to-cart/${productId}/`, { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } })
+                .then(() => location.reload());
+        }
+        
+        function removeItem(productId) {
+            if (confirm('Remove from wishlist?')) {
+                fetch(`/wishlist/remove/${productId}/`, { method: 'POST', headers: { 'X-CSRFToken': '{{ csrf_token }}' } })
+                    .then(() => location.reload());
+            }
+        }
+    </script>
+</body>
+</html>

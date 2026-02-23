@@ -1,0 +1,54 @@
+{
+    "techData": [
+        {
+            "id": "e1",
+            "brand": "Asus",
+            "title": "Gaming Laptop - High Performance",
+            "img": "https://m.media-amazon.com/images/I/71TPda7cwUL._SL1500_.jpg",
+            "price": "₹75,000",
+            "description": "Powerful gaming laptop for pros."
+        },
+        {
+            "id": "e2",
+            "brand": "Apple",
+            "title": "MacBook Air M2",
+            "img": "https://m.media-amazon.com/images/I/71f5Eu5lJSL._SL1500_.jpg",
+            "price": "₹89,900",
+            "description": "Thinner, lighter, faster."
+        }
+    ],
+    "heData_trend": [
+        {
+            "id": 1,
+            "brand": "DIMMY",
+            "title": "Men Regular Fit Self Design Button Down Collar Casual S...",
+            "img": "https://rukminim2.flixcart.com/image/612/612/xif0q/shirt/v/w/u/l-linen111-dimmy-original-imahfk9nkms65eh7.jpeg?q=70",
+            "price": "₹368"
+        },
+        {
+            "id": 2,
+            "brand": "cvc",
+            "title": "Men Regular Fit Solid Spread Collar Formal Shirt",
+            "img": "https://rukminim2.flixcart.com/image/612/612/xif0q/shirt/a/o/y/42-c-511-cvc-original-imah6h6e4wpez5ru.jpeg?q=70",
+            "price": "₹500"
+        }
+    ],
+    "sheData_trend": [
+        {
+            "id": 3,
+            "brand": "FUNDAY FASHION",
+            "title": "Women Solid Casual Jacket",
+            "img": "https://rukminim2.flixcart.com/image/612/612/xif0q/jacket/5/s/z/l-1-no-4785-88-funday-fashion-original-imagjq4fb6dkhtzh.jpeg?q=70",
+            "price": "₹498"
+        },
+        {
+            "id": 4,
+            "brand": "ARJ FASHION",
+            "title": "Net Self Design Black Women Dupatta",
+            "img": "https://rukminim2.flixcart.com/image/612/612/xif0q/dupatta/o/s/s/2-5-meters-1-7017-arj-fashion-original-imahhhxbu4wgmgy8.jpeg?q=70",
+            "price": "₹375"
+        }
+    ],
+    "heData_MS": [],
+    "sheData_MS": []
+}

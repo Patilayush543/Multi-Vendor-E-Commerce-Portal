@@ -1,0 +1,184 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  font-family: Poppins, sans-serif;
+  transition: background .4s ease;
+}
+
+/* THEME COLORS */
+:root {
+  --primary: #0F766E;
+  --primary-light: #14B8A6;
+  --primary-soft: #99F6E4;
+
+  --background: #F6F7F9;
+  --surface: #FFFFFF;
+  --text: #ffffff;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* He Theme */
+.he-theme {
+  --primary: #1E3A8A;
+  --primary-light: #3B82F6;
+  --primary-soft: #DBEAFE;
+
+  --background: #F3F4F6;
+  --surface: #FFFFFF;
+  --text: #ffffff;
+}
+
+/* -----------------------------------------
+   MAIN LOGIN PAGE BACKGROUND (Glass Effect)
+----------------------------------------- */
+.login-page {
+  background: var(--background);
+}
+
+.Login-body {
+  position: relative;
+  min-height: 100vh;
+  padding-top: 18vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url("https://images.unsplash.com/photo-1523275335684-37898b6baf30")
+      center/cover no-repeat;
+  backdrop-filter: blur(6px);
+}
+
+/* BLUR OVERLAY */
+.blur-overlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: -1;
+}
+
+/* -----------------------------------------
+   TAB BUTTONS (Login / Signup)
+----------------------------------------- */
+.tab-box {
+  display: flex;
+  width: 80%;
+  max-width: 350px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  transition: 0.3s ease;
+}
+
+.tab-btn.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* -----------------------------------------
+   FORMS (Glass Box)
+----------------------------------------- */
+.form-box {
+  width: 90%;
+  max-width: 450px;
+  padding: 25px;
+  margin-top: 15px;
+  border-radius: 18px;
+  display: none;
+  background: rgba(255, 255, 255, 0.20);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(15px);
+}
+
+.form-box.active {
+  display: block;
+}
+
+.title, .L-title {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* INPUT FIELDS */
+.input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+}
+
+.input::placeholder {
+  color: #eee;
+}
+
+/* BUTTON */
+.btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 16px;
+  transition: .3s ease;
+}
+
+.btn:hover {
+  background: var(--primary-light);
+}
+
+/* -----------------------------------------
+   RESPONSIVE
+----------------------------------------- */
+@media (max-width: 480px) {
+  .form-box {
+    width: 92%;
+    padding: 20px;
+  }
+  .input {
+    font-size: 14px;
+  }
+  .btn {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 360px) {
+  .tab-btn {
+    font-size: 14px;
+  }
+  .form-box {
+    padding: 18px;
+  }
+}

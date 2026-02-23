@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Invoice - {{ order.id }}</title>
+    <style>
+        body { font-family: DejaVu Sans, Arial, sans-serif; color: #333; }
+        .header { text-align: center; border-bottom: 2px solid #1a2d5a; padding-bottom: 10px; margin-bottom: 12px; }
+        .navy-text { color: #0f1f4f; font-weight: bold; }
+        .invoice-box { padding: 12px; border: 1px solid #eee; }
+        table { width: 100%; line-height: inherit; text-align: left; border-collapse: collapse; }
+        table th { background: #f8fafc; padding: 8px; border-bottom: 1px solid #ddd; }
+        table td { padding: 8px; border-bottom: 1px solid #eee; }
+        .total { text-align: right; font-size: 1.1rem; margin-top: 12px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="navy-text">PATILCRAFT INVOICE</h1>
+        <p>Order ID: #{{ order.id }} | Date: {{ order.ordered_date|date:"d M Y" }}</p>
+    </div>
+
+    <div class="invoice-box">
+        <h4>Customer Details:</h4>
+        <p><strong>Name:</strong> {{ user.get_full_name|default:user.username }}<br>
+           <strong>Shipping Address:</strong> {{ order.shipping_address }}<br>
+           <strong>Mobile:</strong> {{ order.mobile }}</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ order.product_name }}</td>
+                    <td>{{ order.status|title }}</td>
+                    <td style="text-align:right">₹{{ order.price }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total">
+            <p><strong>Total Amount Paid: <span class="navy-text">₹{{ order.price }}</span></strong></p>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 24px; font-size: 10px; color: #999;">
+        Thank you for shopping at Patilcraft - Premium Business Platform
+    </div>
+</body>
+</html>

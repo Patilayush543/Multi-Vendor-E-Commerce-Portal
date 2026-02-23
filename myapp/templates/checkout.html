@@ -1,0 +1,520 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Patilcraft</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+            background: linear-gradient(135deg, #0f1f4f 0%, #1a2d5a 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .checkout-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .checkout-wrapper {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .checkout-form {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-section h2 {
+            color: #0f1f4f;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section h2 i {
+            color: #0f1f4f;
+            font-size: 1.5rem;
+        }
+
+        .form-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #0f1f4f 0%, transparent 100%);
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #0f1f4f;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0f1f4f;
+            box-shadow: 0 0 0 3px rgba(15, 31, 79, 0.1);
+            background-color: #f9fbff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .payment-options {
+            background: #f5f7fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            background: white;
+            border: 2px solid #e0e0e0;
+        }
+
+        .payment-option:hover {
+            border-color: #0f1f4f;
+            box-shadow: 0 4px 12px rgba(15, 31, 79, 0.1);
+        }
+
+        .payment-option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #0f1f4f;
+        }
+
+        .payment-option input[type="radio"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .payment-option:has(input:disabled) {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #f0f0f0 !important;
+        }
+
+        .payment-option strong {
+            color: #0f1f4f;
+            font-size: 1rem;
+        }
+
+        .payment-option .disabled {
+            color: #999;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0f1f4f 0%, #1a2d5a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(15, 31, 79, 0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(15, 31, 79, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .price-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            height: fit-content;
+            position: sticky;
+            top: 40px;
+        }
+
+        .summary-header {
+            color: #0f1f4f;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-divider {
+            height: 2px;
+            background: linear-gradient(90deg, #0f1f4f 0%, transparent 100%);
+            margin-bottom: 20px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .price-row span:last-child {
+            font-weight: 500;
+            color: #0f1f4f;
+        }
+
+        .price-total {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f1f4f10 0%, #1a2d5a10 100%);
+            border-radius: 8px;
+            border-left: 4px solid #0f1f4f;
+        }
+
+        .price-total span:first-child {
+            font-weight: 700;
+            color: #0f1f4f;
+            font-size: 1.1rem;
+        }
+
+        .price-total span:last-child {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0f1f4f;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f1f4f;
+            font-weight: 600;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .security-badge i {
+            color: #0f1f4f;
+            font-size: 1.2rem;
+        }
+
+        .delivery-free {
+            color: #2ecc71;
+            font-weight: 700;
+        }
+
+        .qr-code-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #4caf50;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .qr-code-container.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .qr-code-container h3 {
+            color: #0f1f4f;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .qr-code-display {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .qr-code-display img {
+            width: 220px;
+            height: 220px;
+            display: block;
+            border-radius: 6px;
+        }
+
+        .qr-instructions {
+            background: #e8f5e9;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #4caf50;
+            margin-top: 10px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-wrapper {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .checkout-form,
+            .price-summary {
+                padding: 25px;
+            }
+
+            .price-summary {
+                position: static;
+                top: auto;
+            }
+        }
+    </style>
+    <script>
+        function togglePaymentFields() {
+            const method = document.querySelector('input[name="payment_method"]:checked').value;
+            const transField = document.getElementById('transaction-id-field');
+            const qrContainer = document.getElementById('upi-qr-container');
+            
+            if (method === 'upi_qr') {
+                transField.style.display = 'block';
+                qrContainer.classList.add('active');
+            } else {
+                transField.style.display = 'none';
+                qrContainer.classList.remove('active');
+                document.getElementById('transaction_id').value = '';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="checkout-container">
+        <div class="header">
+            <h1><i class="bi bi-bag-check-fill"></i> Secure Checkout</h1>
+            <p>Complete your purchase with confidence</p>
+        </div>
+
+        <div class="checkout-wrapper">
+            <!-- Left: Form -->
+            <div class="checkout-form">
+                <form action="{% url 'confirm_order' %}" method="POST">
+                    {% csrf_token %}
+
+                    <!-- Delivery Address Section -->
+                    <div class="form-section">
+                        <h2>
+                            <i class="bi bi-geo-alt-fill"></i>
+                            Delivery Address
+                        </h2>
+                        <div class="form-divider"></div>
+
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your full name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="mobile">Phone Number</label>
+                            <input type="tel" id="mobile" name="mobile" required placeholder="10-digit mobile number" pattern="[0-9]{10}" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Complete Address</label>
+                            <textarea id="address" name="address" required placeholder="House No., Building Name, Street, Area, Landmark"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Payment Options Section -->
+                    <div class="form-section">
+                        <h2>
+                            <i class="bi bi-credit-card-2-back-fill"></i>
+                            Payment Method
+                        </h2>
+                        <div class="form-divider"></div>
+
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="cod" checked onchange="togglePaymentFields()" />
+                                <div>
+                                    <strong>Cash on Delivery (COD)</strong>
+                                    <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">
+                                        Pay when your order arrives
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="razorpay" onchange="togglePaymentFields()" disabled />
+                                <div>
+                                    <strong>Razorpay (Card/UPI/NetBanking)</strong>
+                                    <div style="font-size: 0.85rem; color: #999; margin-top: 4px;">
+                                        Coming soon
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="upi_qr" onchange="togglePaymentFields()" />
+                                <div>
+                                    <strong>UPI QR / Manual Transfer</strong>
+                                    <div style="font-size: 0.85rem; color: #666; margin-top: 4px;">
+                                        Scan QR or transfer manually
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Transaction ID input (shown for UPI QR) -->
+                        <div id="transaction-id-field" style="margin-top: 20px; display: none;">
+                            <label for="transaction_id">Transaction ID / UTR (Optional)</label>
+                            <input type="text" id="transaction_id" name="transaction_id" placeholder="Enter UTR number after transfer" maxlength="100" />
+                            <small style="color: #999; display: block; margin-top: 6px;">This helps us verify your payment faster</small>
+                        </div>
+
+                        <!-- Personal QR Code Display -->
+                        <div id="upi-qr-container" class="qr-code-container">
+                            <h3><i class="bi bi-qr-code"></i> Scan to Pay</h3>
+                            <div class="qr-code-display">
+                                <img src="{% static 'image/my_qr.jpeg.jpeg' %}" alt="UPI QR Code" />
+                            </div>
+                            <div class="qr-instructions">
+                                📱 Scan this QR code using your bank app or any UPI app to make payment
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="bi bi-check-circle"></i> Confirm Order
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Price Summary -->
+            <div class="price-summary">
+                <div class="summary-header">Order Summary</div>
+                <div class="summary-divider"></div>
+
+                <div class="price-row">
+                    <span>Subtotal ({{ items|length }} item{{ items|length|pluralize }})</span>
+                    <span>₹{{ total }}</span>
+                </div>
+
+                <div class="price-row">
+                    <span>Delivery Charges</span>
+                    <span class="delivery-free">FREE</span>
+                </div>
+
+                <div class="price-row">
+                    <span>Discount</span>
+                    <span style="color: #2ecc71;">- ₹0</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="price-total">
+                    <span>Amount to Pay</span>
+                    <span>₹{{ total }}</span>
+                </div>
+
+                <div class="security-badge">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <span>100% Safe & Secure Checkout</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

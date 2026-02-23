@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PatilCraft | Premium Tech & Fashion</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #1a2a6c; 
+            --accent: #f39c12; 
+            --bg: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg); 
+            color: #1e293b;
+        }
+
+        /* Modern Glass Navbar */
+        .navbar-custom { 
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            padding: 15px 5%; 
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
+
+        .logo-img { height: 45px; width: auto; transition: 0.3s; }
+        .logo-img:hover { transform: scale(1.05); }
+
+        /* Sleek Search Bar */
+        .search-box { flex-grow: 1; max-width: 500px; margin: 0 30px; position: relative; }
+        .search-box input { 
+            width: 100%; 
+            padding: 12px 45px 12px 20px; 
+            border-radius: 12px; 
+            border: 1px solid #e2e8f0; 
+            background: #ffffff; 
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(26, 42, 108, 0.1); }
+        .search-box button { 
+            position: absolute; right: 15px; top: 12px; 
+            border: none; background: none; color: var(--primary); 
+        }
+
+        /* Category Pill Navigation */
+        .cat-bar { background: #fff; padding: 12px 0; border-bottom: 1px solid #edf2f7; }
+        .cat-item { 
+            text-decoration: none; 
+            color: #64748b; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            padding: 8px 20px; 
+            border-radius: 50px;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+        .cat-item:hover { color: var(--primary); background: rgba(26, 42, 108, 0.05); }
+        .cat-item.active { background: var(--primary); color: white; }
+
+        /* Hero Image with Modern Typography */
+        .hero-banner { 
+            position: relative; 
+            height: 450px; 
+            border-radius: 0 0 40px 40px; 
+            overflow: hidden; 
+            margin-bottom: 40px;
+        }
+        .hero-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0.7), transparent);
+            display: flex; align-items: center; padding: 0 8%;
+        }
+        .hero-title { font-weight: 800; font-size: 3.8rem; color: white; line-height: 1.1; }
+
+        /* Premium Product Cards */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; padding-bottom: 60px; }
+        .pro-card { 
+            background: white; 
+            border-radius: 24px; 
+            padding: 20px; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border: 1px solid rgba(0,0,0,0.03);
+            height: 100%;
+            display: flex; flex-direction: column;
+        }
+        .pro-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .pro-card img { width: 100%; height: 220px; object-fit: contain; margin-bottom: 20px; border-radius: 15px; }
+        .pro-brand { font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+        .pro-title { font-size: 1.05rem; font-weight: 700; color: #1e293b; margin: 5px 0 15px; height: 50px; overflow: hidden; }
+        .pro-price { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-top: auto; }
+
+        .btn-add { 
+            background: #1e293b; color: white; border: none; 
+            width: 100%; padding: 14px; border-radius: 14px; 
+            font-weight: 700; margin-top: 20px; transition: 0.3s; 
+        }
+        .btn-add:hover { background: var(--accent); transform: scale(1.02); }
+
+        .login-link { color: var(--primary); font-weight: 700; text-decoration: none; border-bottom: 2px solid transparent; transition: 0.3s; }
+        .login-link:hover { border-bottom-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar-custom d-flex align-items-center justify-content-between">
+        <a href="/">
+            <img src="{% static 'image/logo.png' %}" alt="Patilcraft" class="logo-img">
+        </a>
+
+        <form action="/" method="GET" class="search-box">
+            <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search premium products...">
+            <button type="submit"><i class="bi bi-search"></i></button>
+        </form>
+
+        <div class="d-flex align-items-center gap-4">
+            <a href="{% url 'about' %}" class="d-none d-lg-block text-dark text-decoration-none fw-semibold">About</a>
+            <a href="/cart/" class="text-dark position-relative" style="font-size: 1.5rem;">
+                <i class="bi bi-bag-heart"></i>
+            </a>
+            
+            <div class="nav-auth">
+                {% if user.is_authenticated %}
+                    <a href="/profile/" class="text-decoration-none">
+                        {% if user.socialaccount_set.first %}
+                            <img src="{{ user.socialaccount_set.first.get_avatar_url }}" style="width: 38px; border-radius: 50%; border: 2px solid var(--primary);">
+                        {% else %}
+                            <i class="bi bi-person-circle" style="font-size: 1.8rem; color: var(--primary);"></i>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'auth' %}" class="login-link">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="cat-bar d-flex justify-content-center gap-3 flex-wrap">
+        <a href="/?cat=fashion" class="cat-item {% if cat == 'fashion' %}active{% endif %}">Fashion</a>
+        <a href="/?cat=tech" class="cat-item {% if cat == 'tech' %}active{% endif %}">Electronics</a>
+        <a href="/?cat=tech&sub=laptop" class="cat-item">Laptops</a>
+        <a href="/?cat=tech&sub=mobile" class="cat-item">Mobiles</a>
+    </div>
+
+    <main>
+        <div class="container-fluid px-0">
+            <div class="hero-banner">
+                <img src="{% static 'image/main.jpeg' %}" alt="PatilCraft Banner">
+                <div class="hero-overlay">
+                    <div class="text-white">
+                        <p class="text-uppercase fw-bold mb-2" style="letter-spacing: 4px; color: var(--accent);">Estd. 2025</p>
+                        <h1 class="hero-title">PatilCraft<br><span style="color: var(--accent);">Excellence.</span></h1>
+                        <p class="mt-4 fs-5 opacity-75">The e-commerce platform that cares.</p>
+                        <div class="mt-5 d-flex gap-3">
+                            <button onclick="location.href='/?cat=fashion'" class="btn btn-light btn-lg rounded-pill px-5 fw-bold">Fashion</button>
+                            <button onclick="location.href='/?cat=tech'" class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">Tech</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mt-5 mb-4">
+                <div>
+                    <h2 class="fw-bold m-0">Trending Now</h2>
+                    <p class="text-muted">Selected premium items for you</p>
+                </div>
+                {% if query %}
+                    <p class="text-primary fw-bold">Showing results for "{{ query }}"</p>
+                {% endif %}
+            </div>
+
+            <div class="product-grid">
+                {% for item in trend %}
+                <div class="pro-card">
+                    <div onclick="location.href='/product/{{ item.category }}/{{ item.id }}/'" style="cursor: pointer; flex-grow: 1;">
+                        <img src="{{ item.image_url }}" alt="{{ item.title }}">
+                        <p class="pro-brand">{{ item.brand }}</p>
+                        <h3 class="pro-title">{{ item.title }}</h3>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p class="pro-price">₹{{ item.price }}</p>
+                            <span class="badge bg-light text-dark border">New</span>
+                        </div>
+                    </div>
+                    
+                    <a href="/add-to-cart/{{ item.id }}/" style="text-decoration: none;">
+                        <button class="btn-add">
+                            <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                        </button>
+                    </a>
+                </div>
+                {% empty %}
+                <div class="w-100 text-center py-5">
+                    <i class="bi bi-search-heart" style="font-size: 4rem; color: #cbd5e1;"></i>
+                    <h3 class="mt-4 fw-bold">No results found</h3>
+                    <p class="text-muted">Try adjusting your filters or search terms.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <footer style="background: #0f172a; color: white; padding: 80px 5% 30px; border-radius: 40px 40px 0 0;">
+        <div class="row">
+            <div class="col-md-4 mb-5">
+                <img src="{% static 'image/logo.png' %}" alt="Patilcraft" style="height: 40px; filter: brightness(0) invert(1); margin-bottom: 25px;">
+                <p class="text-secondary pe-lg-5">Your one-stop destination for everything tech and fashion. Designed for quality, built for you.</p>
+            </div>
+            <div class="col-md-4 mb-5">
+                <h5 class="fw-bold mb-4">Support Center</h5>
+                <p class="text-secondary mb-2"><i class="bi bi-envelope-at me-2"></i> help@patilcraft.com</p>
+                <p class="text-secondary"><i class="bi bi-telephone-inbound me-2"></i> 1800-PATIL-CRAFT</p>
+            </div>
+            <div class="col-md-4 mb-5 text-md-end">
+                <h5 class="fw-bold mb-4">Our Base</h5>
+                <p class="text-secondary">Mumbai University Hub<br>Parel, Mumbai, MH</p>
+                <div class="d-flex justify-content-md-end gap-3 mt-4">
+                    <i class="bi bi-instagram fs-4"></i>
+                    <i class="bi bi-twitter-x fs-4"></i>
+                    <i class="bi bi-linkedin fs-4"></i>
+                </div>
+            </div>
+        </div>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 40px 0;">
+        <div class="d-flex justify-content-between flex-wrap gap-3">
+            <p class="text-secondary small">© 2026 Patilcraft | B.Sc. IT Project</p>
+            <p class="text-secondary small">Designed by <span class="text-white fw-bold">Ayush Patil</span></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

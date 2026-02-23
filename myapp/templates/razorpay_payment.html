@@ -1,0 +1,328 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Payment - Razorpay</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        :root {
+            --navy: #0f1f4f;
+            --white: #ffffff;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--navy) 0%, #1a2d5f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--navy);
+        }
+        
+        .payment-container {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(15, 31, 79, 0.2);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .payment-header {
+            margin-bottom: 30px;
+        }
+        
+        .payment-header h1 {
+            color: var(--navy);
+            font-size: 28px;
+            margin: 0 0 10px 0;
+        }
+        
+        .payment-header p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .order-item .label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .order-item .value {
+            color: var(--navy);
+            font-weight: 600;
+        }
+        
+        .order-item.total {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        
+        .order-item.total .value {
+            color: #28a745;
+            font-size: 18px;
+        }
+        
+        .pay-button {
+            background: linear-gradient(135deg, var(--navy) 0%, #1a2d5f 100%);
+            color: var(--white);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(15, 31, 79, 0.3);
+        }
+        
+        .pay-button:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            color: var(--navy);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .success-message.active {
+            display: block;
+        }
+        
+        .back-link {
+            color: var(--navy);
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .payment-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .payment-header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1>Complete Your Payment</h1>
+            <p>Secure payment powered by Razorpay</p>
+        </div>
+        
+        <div class="order-details">
+            <div class="order-item">
+                <span class="label">Order Amount:</span>
+                <span class="value">₹ {{ amount|floatformat:2 }}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Customer Name:</span>
+                <span class="value">{{ user_name }}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Email:</span>
+                <span class="value">{{ user_email }}</span>
+            </div>
+            <div class="order-item">
+                <span class="label">Payment Method:</span>
+                <span class="value">Razorpay</span>
+            </div>
+            <div class="order-item total">
+                <span class="label">Total Payable:</span>
+                <span class="value">₹ {{ amount|floatformat:2 }}</span>
+            </div>
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage">Payment processing...</div>
+        
+        <button class="pay-button" id="payButton" onclick="initRazorpay()">
+            Pay ₹ {{ amount|floatformat:2 }} Now
+        </button>
+        
+        <div class="loading" id="loading">
+            <p>Processing your payment...</p>
+        </div>
+        
+        <a href="{% url 'cart_view' %}" class="back-link">← Back to Cart</a>
+    </div>
+    
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        let paymentProcessing = false;
+        
+        function initRazorpay() {
+            if (paymentProcessing) return;
+            
+            const options = {
+                "key": "{{ razorpay_key_id }}",
+                "amount": {{ amount_paise }},
+                "currency": "INR",
+                "name": "Patilcraft",
+                "description": "Order Payment",
+                "order_id": "{{ razorpay_order_id }}",
+                "handler": function(response) {
+                    paymentProcessing = true;
+                    document.getElementById('loading').classList.add('active');
+                    document.getElementById('payButton').disabled = true;
+                    
+                    // Send payment confirmation to backend
+                    fetch("{% url 'verify_razorpay' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken')
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('loading').classList.remove('active');
+                        
+                        if (data.status === 'success') {
+                            document.getElementById('successMessage').textContent = 'Payment successful! Redirecting...';
+                            document.getElementById('successMessage').classList.add('active');
+                            setTimeout(() => {
+                                window.location.href = "{% url 'order_success' %}";
+                            }, 2000);
+                        } else {
+                            showError(data.message || 'Payment verification failed');
+                            document.getElementById('payButton').disabled = false;
+                            paymentProcessing = false;
+                        }
+                    })
+                    .catch(err => {
+                        showError('Error verifying payment: ' + err.message);
+                        document.getElementById('loading').classList.remove('active');
+                        document.getElementById('payButton').disabled = false;
+                        paymentProcessing = false;
+                    });
+                },
+                "prefill": {
+                    "name": "{{ user_name }}",
+                    "email": "{{ user_email }}"
+                },
+                "theme": {
+                    "color": "#0f1f4f"
+                },
+                "modal": {
+                    "ondismiss": function() {
+                        showError('Payment cancelled by user');
+                        paymentProcessing = false;
+                    }
+                }
+            };
+            
+            const rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function(response) {
+                showError('Payment failed: ' + response.error.description);
+                paymentProcessing = false;
+            });
+            
+            rzp1.open();
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('active');
+            setTimeout(() => {
+                errorDiv.classList.remove('active');
+            }, 5000);
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Auto-open payment page on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Optionally auto-open: initRazorpay();
+        });
+    </script>
+</body>
+</html>

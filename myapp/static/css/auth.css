@@ -1,0 +1,187 @@
+/* OVERLAY (now fixed and hidden) */
+.auth-bg {
+    margin: 0;
+  /*  position: fixed; */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: none;
+    /* hidden by default */
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.35);
+    /* dim the index background */
+    backdrop-filter: blur(6px);
+    /* soft blur of background */
+    z-index: 9999;
+    /* above everything */
+    padding: 20px;
+}
+
+/* MAIN CARD */
+.auth-container {
+    width: 350px;
+    max-width: 95%;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+    animation: fadeIn 0.35s ease-in-out;
+    position: relative;
+    /* for close button */
+}
+
+/* Close button */
+.close-btn {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* keep rest of your styles as-is (tabs, form, inputs, btns) */
+/* ... your existing CSS ... */
+
+
+/* BACKGROUND */
+.auth-bg {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('/static/image/main.jpeg') center/cover no-repeat fixed;
+    backdrop-filter: blur(55px);
+}
+
+/* MAIN CARD */
+.auth-container {
+    width: 350px;
+    padding: 25px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* TABS */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.tab {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tab.active {
+    border-bottom: 2px solid #fff;
+}
+
+/* FORM */
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+h2 {
+    color: white;
+    margin-bottom: 10px;
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px -8px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+    /* visible white */
+    opacity: 1;
+    /* Firefox fix */
+}
+
+.error {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: -5px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #0F766E;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background: #0d5d57;
+}
+
+/* GOOGLE BUTTON */
+.google-btn {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: white;
+    color: #444;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.google-btn img {
+    width: 20px;
+}
+
+.or-line {
+    color: white;
+    margin: 10px 0;
+    font-size: 14px;
+}

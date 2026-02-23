@@ -1,0 +1,89 @@
+{% load static %}
+{% load socialaccount %}
+
+<div class="auth-bg" id="authPopup" aria-hidden="true">
+  <div class="auth-container" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button class="close-btn" onclick="closeAuth()" aria-label="Close auth">✕</button>
+
+    <div class="tabs">
+      <button class="tab active" onclick="openTab(event,'login')">Login</button>
+      <button class="tab" onclick="openTab(event,'signup')">Signup</button>
+    </div>
+
+    <div id="login" class="form active">
+      <h2 id="authTitle">Welcome Back 👋</h2>
+      
+      <form method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        <input class="input" name="login" placeholder="Username or Email" required>
+        <input class="input" type="password" name="password" placeholder="Password" required>
+        
+        <button type="submit" class="btn login-btn">Login</button>
+      </form>
+
+      <div class="or-line">OR</div>
+
+      <a class="google-btn" href="{% provider_login_url 'google' %}">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="google">
+          Continue with Google
+      </a>
+    </div>
+
+    <div id="signup" class="form">
+      <h2>Create Account ✨</h2>
+
+      <form method="POST" action="{% url 'account_signup' %}">
+        {% csrf_token %}
+
+        <div class="role-selector mb-3" style="background: #f8f9fa; padding: 10px; border-radius: 10px;">
+          <label class="small fw-bold text-muted d-block mb-1">REGISTER AS A:</label>
+          <div class="d-flex justify-content-around">
+            {{ signup_form.user_type }}
+          </div>
+        </div>
+
+        <div class="mb-2">
+          {{ signup_form.company_name }}
+          <small class="text-muted d-block" style="font-size: 10px;">{{ signup_form.company_name.help_text }}</small>
+        </div>
+
+        {% for field in signup_form %}
+            {% if field.name != 'user_type' and field.name != 'company_name' %}
+                <div class="mb-2">
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="text-danger" style="font-size: 10px;">{{ field.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <button type="submit" class="btn signup-btn">Complete Signup</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Fix for Django Radio Buttons layout in the modal */
+  #id_user_type {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+  }
+  #id_user_type input { margin-right: 5px; }
+  
+  /* Ensure our Django inputs match your "input" class styling */
+  #signup form input, #signup form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: block;
+  }
+</style>

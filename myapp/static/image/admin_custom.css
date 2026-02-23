@@ -1,0 +1,21 @@
+/* 1. Fixes the logo in the top-left SIDEBAR after you log in */
+.brand-link .brand-image {
+    max-height: 40px !important;
+    width: auto !important;
+    object-fit: contain;
+    margin-left: 10px;
+}
+
+/* 2. Fixes the logo on the actual ADMIN LOGIN PAGE */
+.login-logo img {
+    max-width: 200px !important; /* Adjust this width if you want it bigger/smaller */
+    height: auto !important;
+    margin-bottom: 20px;
+}
+
+/* 3. Optional: Centers the login logo perfectly */
+.login-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
