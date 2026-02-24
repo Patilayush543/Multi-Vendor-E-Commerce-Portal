@@ -16,17 +16,20 @@ if 'RENDER' in os.environ:
 
 # --- CSRF Security Configuration ---
 # Add trusted origins for CSRF protection in production
-CSRF_TRUSTED_ORIGINS = os.getenv(
-    'CSRF_TRUSTED_ORIGINS', 
-    'http://localhost:8000,http://127.0.0.1:8000'
-).split(',')
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://multi-vendor-e-commerce-portal-1.onrender.com',  # Your specific Render domain
+]
+
+# Add from environment variable if set
+if os.getenv('CSRF_TRUSTED_ORIGINS'):
+    CSRF_TRUSTED_ORIGINS.extend(os.getenv('CSRF_TRUSTED_ORIGINS', '').split(','))
 
 # On Render, automatically trust the render domain
 if 'RENDER' in os.environ:
     if 'RENDER_EXTERNAL_URL' in os.environ:
         CSRF_TRUSTED_ORIGINS.append(os.environ['RENDER_EXTERNAL_URL'])
-    else:
-        CSRF_TRUSTED_ORIGINS.append('https://*.onrender.com')
 
 # --- 2. APPS & MIDDLEWARE ---
 INSTALLED_APPS = [

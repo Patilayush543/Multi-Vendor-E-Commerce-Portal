@@ -21,16 +21,29 @@ User = get_user_model()
 # Define admin credentials
 ADMIN_USERNAME = 'ayush'
 ADMIN_EMAIL = 'ayush@example.com'
-ADMIN_PASSWORD = 'Pass@123'
+ADMIN_PASSWORD = 'Pass@543'
 
 # Check if the admin user already exists
-if User.objects.filter(username=ADMIN_USERNAME).exists():
-    print(f"User '{ADMIN_USERNAME}' already exists.")
+user, created = User.objects.get_or_create(
+    username=ADMIN_USERNAME,
+    defaults={
+        'email': ADMIN_EMAIL,
+        'is_staff': True,
+        'is_superuser': True,
+    }
+)
+
+# Ensure user has admin permissions
+if not created:
+    user.is_staff = True
+    user.is_superuser = True
+    user.email = ADMIN_EMAIL
+    user.save()
+    print(f"User '{ADMIN_USERNAME}' updated with admin permissions.")
 else:
-    # Create the superuser
-    User.objects.create_superuser(
-        username=ADMIN_USERNAME,
-        email=ADMIN_EMAIL,
-        password=ADMIN_PASSWORD
-    )
+    # Set password for newly created user
+    user.set_password(ADMIN_PASSWORD)
+    user.save()
     print("ADMIN_CREATED")
+
+print(f"Admin account ready: username='{ADMIN_USERNAME}', is_staff={user.is_staff}, is_superuser={user.is_superuser}")
