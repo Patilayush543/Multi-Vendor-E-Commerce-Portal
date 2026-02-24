@@ -112,16 +112,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ECommerce.wsgi.application'
 
 # --- DATABASE CONFIGURATION ---
-# Automatically use PostgreSQL on Render, SQLite locally
+# Force PostgreSQL on Render, fallback to SQLite locally
 import dj_database_url
 
-if os.getenv('DATABASE_URL'):
+if os.environ.get('DATABASE_URL'):
     # Production: Use PostgreSQL provided by Render
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600
         )
     }
 else:
