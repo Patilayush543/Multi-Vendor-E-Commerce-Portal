@@ -14,6 +14,20 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 if 'RENDER' in os.environ:
     ALLOWED_HOSTS.append('.onrender.com')
 
+# --- CSRF Security Configuration ---
+# Add trusted origins for CSRF protection in production
+CSRF_TRUSTED_ORIGINS = os.getenv(
+    'CSRF_TRUSTED_ORIGINS', 
+    'http://localhost:8000,http://127.0.0.1:8000'
+).split(',')
+
+# On Render, automatically trust the render domain
+if 'RENDER' in os.environ:
+    if 'RENDER_EXTERNAL_URL' in os.environ:
+        CSRF_TRUSTED_ORIGINS.append(os.environ['RENDER_EXTERNAL_URL'])
+    else:
+        CSRF_TRUSTED_ORIGINS.append('https://*.onrender.com')
+
 # --- 2. APPS & MIDDLEWARE ---
 INSTALLED_APPS = [
     'jazzmin',  # Must be first for Admin styling - optional admin theme
