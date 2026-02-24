@@ -18,7 +18,7 @@ if DEBUG:
 
 # --- 2. APPS & MIDDLEWARE ---
 INSTALLED_APPS = [
-    # 'jazzmin',  # Must be first for Admin styling - optional admin theme
+    'jazzmin',  # Must be first for Admin styling - optional admin theme
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Add this for serving static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
