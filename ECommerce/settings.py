@@ -8,13 +8,11 @@ load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-patilcraft-key-2026")
 DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'django-ecommerce-web-kewq.onrender.com,localhost,127.0.0.1').split(',')
-if DEBUG:
-    # Allow Django test client host and common local hosts during development
-    _extras = ['testserver', 'localhost', '127.0.0.1']
-    for h in _extras:
-        if h not in ALLOWED_HOSTS:
-            ALLOWED_HOSTS.append(h)
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# On Render, automatically add the Render domain
+if 'RENDER' in os.environ:
+    ALLOWED_HOSTS.append('.onrender.com')
 
 # --- 2. APPS & MIDDLEWARE ---
 INSTALLED_APPS = [
@@ -96,12 +94,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ECommerce.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# --- DATABASE CONFIGURATION ---
+# Automatically use PostgreSQL on Render, SQLite locally
+import dj_database_url
+
+if os.getenv('DATABASE_URL'):
+    # Production: Use PostgreSQL provided by Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Development: Use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # --- 6. INTERNATIONALIZATION ---
 LANGUAGE_CODE = 'en-us'
