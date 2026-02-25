@@ -22,8 +22,6 @@ import json
 import hmac
 import hashlib
 import io
-import razorpay
-import json
 from django.utils import timezone
 
 # PDF libraries: prefer xhtml2pdf (works on all platforms)
@@ -264,53 +262,7 @@ def confirm_order(request):
                 transaction_id=transaction_id if payment_method == 'upi_qr' else None,
             )
         
-        # Handle Razorpay payment initialization
-        if payment_method == 'razorpay' and user_cart.exists():
-            try:
-                razorpay_key_id = getattr(settings, 'RAZORPAY_KEY_ID', None)
-                razorpay_key_secret = getattr(settings, 'RAZORPAY_KEY_SECRET', None)
-                
-                if not razorpay_key_id or not razorpay_key_secret:
-                    return render(request, "checkout.html", {"error": "Razorpay keys not configured"})
-                
-                # Initialize Razorpay client
-                client = razorpay.Client(auth=(razorpay_key_id, razorpay_key_secret))
-                
-                # Calculate total amount in paise (Razorpay expects amount in 1/100 of currency unit)
-                total_amount = sum(order.total_price for order in user_cart)
-                amount_paise = int(total_amount * 100)
-                
-                # Create Razorpay order
-                razorpay_order = client.order.create(dict(
-                    amount=amount_paise,
-                    currency='INR',
-                    receipt=f"order_{request.user.id}_{int(timezone.now().timestamp())}",
-                    notes={
-                        'user_id': request.user.id,
-                        'orders': list(user_cart.values_list('id', flat=True)),
-                    }
-                ))
-                
-                # Store Razorpay order ID in the orders
-                for order in user_cart:
-                    order.transaction_id = razorpay_order['id']
-                    order.save()
-                
-                # Pass Razorpay details to frontend payment page
-                context = {
-                    'razorpay_order_id': razorpay_order['id'],
-                    'razorpay_key_id': razorpay_key_id,
-                    'amount': total_amount,
-                    'amount_paise': amount_paise,
-                    'user_email': request.user.email,
-                    'user_name': request.user.get_full_name() or request.user.username,
-                    'orders': user_cart,
-                }
-                return render(request, "razorpay_payment.html", context)
-            except Exception as e:
-                import traceback
-                traceback.print_exc()
-                return render(request, "checkout.html", {"error": f"Razorpay error: {str(e)}"})
+        # Razorpay payment disabled for offline mode - will be implemented later
         
         # For UPI QR and COD payments: continue with invoice creation
         consolidate = getattr(settings, 'CONSOLIDATED_INVOICE', True)

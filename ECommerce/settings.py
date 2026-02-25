@@ -69,7 +69,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_ON_GET = True
 
@@ -155,28 +155,68 @@ JAZZMIN_SETTINGS = {
     "site_logo": "image/logo.png",  
     "login_logo": "image/logo.png",
     "site_logo_classes": "img-circle",
-    "custom_css": "image/admin_custom.css",
-    "welcome_sign": "Welcome to the Patilcraft Management Portal",
-    "copyright": "Patilcraft Ltd",
+    "custom_css": "css/admin_dashboard.css",
+    "custom_js": "js/admin_navbar.js",
+    "login_logo_below": False,
+    "welcome_sign": "Welcome to Patilcraft Management Portal",
+    "copyright": "Patilcraft Ltd © 2026",
+    "search_model": "auth.User",
+    "user_avatar": None,
+    "show_ui_builder": False,
+    "navigation": [
+        {"app": "auth", "icon": "fas fa-users-cog", "name": "Authentication"},
+        {"app": "myapp", "icon": "fas fa-check-circle", "name": "App Management"},
+    ],
     "topmenu_links": [
-        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "View Website", "url": "/", "new_window": True},
+        {"name": "Dashboard",  "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "View Website", "url": "/", "new_window": True, "icon": "fas fa-globe"},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
+    "hide_apps": [],
     "icons": {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
+        "auth.group": "fas fa-object-group",
         "myapp.Product": "fas fa-shopping-basket",
         "myapp.CartOrder": "fas fa-cart-arrow-down",
         "myapp.ContactMessage": "fas fa-envelope",
+        "myapp.ProductReview": "fas fa-star",
+        "myapp.WishlistItem": "fas fa-heart",
+        "myapp.Cart": "fas fa-shopping-cart",
+        "myapp.CartItem": "fas fa-plus-circle",
+        "myapp.Coupon": "fas fa-ticket-alt",
+        "myapp.Invoice": "fas fa-file-invoice",
+        "myapp.RefundRequest": "fas fa-redo",
+        "myapp.NewsletterSubscription": "fas fa-envelope-open",
+        "myapp.Profile": "fas fa-user-circle",
+        "myapp.SellerAnalytics": "fas fa-chart-bar",
     },
+    "order_with_respect_to": ["myapp"],
+    "changeform_format": "collapsible",
+    "use_google_fonts_cdn": True,
 }
 
 JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
-    "navbar": "navbar-dark",
-    "brand_colour": "navbar-dark",
+    "navbar": "navbar-whitespace navbar-light",
+    "navbar_fixed": True,
+    "sidebar": "sidebar-light",
+    "accent": "accent-teal",
+    "brand_colour": "navbar-whitespace",
+    "logo_colour": True,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": True,
+    "custom_css": None,
+    "custom_js": None,
+    "show_fieldsets": True,
     "changeform_format": "collapsible",
     "navigation_expanded": True,
 }
