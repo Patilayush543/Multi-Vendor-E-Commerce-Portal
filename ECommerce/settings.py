@@ -7,17 +7,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-patilcraft-key-2026")
-DEBUG = False
-ALLOWED_HOSTS = [
-    "multi-vendor-e-commerce-portal-1.onrender.com",
-    "localhost",
-    "127.0.0.1",
-]
+DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# On Render, automatically add the Render domain
+if 'RENDER' in os.environ:
+    ALLOWED_HOSTS.append('.onrender.com')
 
 # --- CSRF Security Configuration ---
+# Add trusted origins for CSRF protection in production
 CSRF_TRUSTED_ORIGINS = [
-    "https://multi-vendor-e-commerce-portal-1.onrender.com",
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://multi-vendor-e-commerce-portal-1.onrender.com',  # Your specific Render domain
 ]
+
+# Add from environment variable if set
+if os.getenv('CSRF_TRUSTED_ORIGINS'):
+    CSRF_TRUSTED_ORIGINS.extend(os.getenv('CSRF_TRUSTED_ORIGINS', '').split(','))
+
+# On Render, automatically trust the render domain
+if 'RENDER' in os.environ:
+    if 'RENDER_EXTERNAL_URL' in os.environ:
+        CSRF_TRUSTED_ORIGINS.append(os.environ['RENDER_EXTERNAL_URL'])
 
 # --- 2. APPS & MIDDLEWARE ---
 INSTALLED_APPS = [
@@ -100,11 +112,25 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ECommerce.wsgi.application'
 
 # --- DATABASE CONFIGURATION ---
+# Force PostgreSQL on Render, fallback to SQLite locally
 import dj_database_url
 
-DATABASES = {
-    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
-}
+if os.environ.get('DATABASE_URL'):
+    # Production: Use PostgreSQL provided by Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600
+        )
+    }
+else:
+    # Development: Use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # --- 6. INTERNATIONALIZATION ---
 LANGUAGE_CODE = 'en-us'
