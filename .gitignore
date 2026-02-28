@@ -28,8 +28,17 @@ coverage.xml
 db.sqlite3
 db.sqlite3-journal
 /media/
+
+# Static files - ignore bulk files but KEEP custom CSS/JS for deployment
 /staticfiles/
-/static/
+/static/*
+!/static/css/
+!/static/js/
+!/static/data/
+!/static/image/
+/static/vendor/
+/static/admin/
+/static/jazzmin/
 !.gitkeep
 
 # Environment Variables
