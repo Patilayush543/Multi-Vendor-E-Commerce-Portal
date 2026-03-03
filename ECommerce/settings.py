@@ -10,8 +10,13 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-patilcraft-key-2026")
 # In production we explicitly disable debug and lock down hosts.
 DEBUG = False  # ensure this is off on Render
 
-# explicit allowed hosts including Render service domain and locals
-ALLOWED_HOSTS = ['patilcraft.onrender.com', 'localhost', '127.0.0.1']
+# explicit allowed hosts including both old and new Render service domains plus locals
+ALLOWED_HOSTS = [
+    'patilcraft.onrender.com',
+    'multi-vendor-e-commerce-portal-1.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 # previous dynamic logic left for reference (commented out)
 # ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h]
@@ -20,9 +25,10 @@ ALLOWED_HOSTS = ['patilcraft.onrender.com', 'localhost', '127.0.0.1']
 # ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
 
 # --- CSRF Security Configuration ---
-# Only trust HTTPS origin of deployed site
+# Only trust HTTPS origins of deployed sites (both old and new Render URL)
 CSRF_TRUSTED_ORIGINS = [
     'https://patilcraft.onrender.com',
+    'https://multi-vendor-e-commerce-portal-1.onrender.com',
 ]
 
 # keep local dev origins if needed (commented)
