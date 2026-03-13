@@ -273,6 +273,78 @@ main {
   background-color: var(--primary-light);
 }
 
+/* ----------------------------
+   PatilApx UI polish overrides
+----------------------------- */
+
+.navbar,
+nav {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.pro-card,
+.product-card {
+  border-radius: 15px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pro-card:hover,
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(15, 31, 79, 0.14);
+}
+
+.btn,
+.btn-add,
+.btn-checkout,
+button[type='submit'] {
+  background: linear-gradient(135deg, #1a2a6c 0%, #2b4cb7 100%);
+  border: none;
+  color: #fff;
+}
+
+.btn:hover,
+.btn-add:hover,
+.btn-checkout:hover,
+button[type='submit']:hover {
+  background: linear-gradient(135deg, #2b4cb7 0%, #3c63df 100%);
+}
+
+body {
+  animation: page-fade-in 0.7s ease;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .theme-bubble {
   animation: bubble 0.4s ease;
 }

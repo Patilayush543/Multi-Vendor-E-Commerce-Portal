@@ -152,8 +152,22 @@ USE_TZ = True
 
 # --- 7. STATIC FILES ---
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "myapp" / "static",
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# WhiteNoise + Jazzmin/admin-friendly static configuration for production.
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+WHITENOISE_MANIFEST_STRICT = False
 
 # --- 8. MEDIA FILES (For uploaded product images, etc) ---
 MEDIA_URL = '/media/'

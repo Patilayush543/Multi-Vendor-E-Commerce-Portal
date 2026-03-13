@@ -47,15 +47,9 @@ class SessionCartTest(TestCase):
         response = self.client.get(reverse('add_to_cart', args=[self.product.id]), secure=True)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.headers['Location'], reverse('cart_view'))
+        self.assertEqual(response.headers['Location'], reverse('auth'))
         self.assertFalse(CartOrder.objects.exists())
-
-        session = self.client.session
-        self.assertEqual(session['guest_cart'][str(self.product.id)], 1)
-
-        cart_response = self.client.get(reverse('cart_view'), secure=True)
-        self.assertEqual(cart_response.status_code, 200)
-        self.assertContains(cart_response, self.product.title)
+        self.assertNotIn('guest_cart', self.client.session)
 
     def test_login_merges_session_cart_into_pending_orders(self):
         session = self.client.session
@@ -72,3 +66,8 @@ class SessionCartTest(TestCase):
         order = CartOrder.objects.get(user=self.user, product=self.product, status='pending')
         self.assertEqual(order.quantity, 3)
         self.assertNotIn('guest_cart', self.client.session)
+
+    def test_checkout_redirects_anonymous_user_to_auth(self):
+        response = self.client.get(reverse('checkout'), secure=True)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers['Location'], reverse('auth'))

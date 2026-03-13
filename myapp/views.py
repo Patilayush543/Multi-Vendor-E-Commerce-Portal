@@ -187,7 +187,7 @@ def register_user(request):
                 "signup_form": form, 
                 "login_form": AuthenticationForm(),
             })
-    return redirect('auth_view')
+    return redirect('auth')
 @csrf_protect
 
 def login_user(request):
@@ -216,7 +216,7 @@ def login_user(request):
                 "signup_form": SellerSignUpForm(),
                 "login_form": AuthenticationForm()
             })
-    return redirect('auth_view')
+    return redirect('auth')
 
 def logout_user(request):
     logout(request)
@@ -286,8 +286,7 @@ def add_to_cart(request, p_id):
     quantity = _normalize_quantity(request.POST.get('quantity', 1) if request.method == 'POST' else 1)
 
     if not request.user.is_authenticated:
-        _add_to_session_cart(request, item, quantity)
-        return redirect('cart_view')
+        return redirect('auth')
     
     CartOrder.objects.create(
         user=request.user, 
@@ -319,7 +318,7 @@ def remove_from_cart(request, item_id):
 
 def checkout_view(request):
     if not request.user.is_authenticated:
-        return redirect('auth_view')
+        return redirect('auth')
     items = CartOrder.objects.filter(user=request.user, status='pending')
     total = sum(item.total_price for item in items)  # Use total_price property
     return render(request, "checkout.html", {"items": items, "total": total})
@@ -473,7 +472,7 @@ def confirm_order(request):
     return redirect('cart_view')
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def invoice_view(request, invoice_id):
     """Render a printable invoice for the customer."""
     invoice = get_object_or_404(Invoice, id=invoice_id)
@@ -484,7 +483,7 @@ def invoice_view(request, invoice_id):
     return render(request, 'invoice.html', {'invoice': invoice})
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def invoice_list(request):
     """List all invoices visible to the current user."""
     invoices = Invoice.objects.filter(orders__user=request.user).distinct().order_by('-issued_at')
@@ -517,7 +516,7 @@ def generate_invoice(request, order_id):
     return HttpResponse('PDF generator not available', status=500)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def download_consolidated_invoice(request, invoice_id):
     """Generate a single PDF that contains the consolidated `Invoice` (all linked orders)."""
     invoice = get_object_or_404(Invoice, id=invoice_id)
@@ -580,7 +579,7 @@ def contact(request):
 # ==================== NEW PREMIUM FEATURES ====================
 
 # --- FEATURE 1: PRODUCT DETAIL PAGE (30 min) ---
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def product_detail_new(request, product_id):
     """Premium product detail page with gallery, reviews, and wishlist."""
     product = get_object_or_404(Product, id=product_id)
@@ -720,7 +719,7 @@ def product_list(request):
 
 
 # --- FEATURE 3: WISHLIST MANAGEMENT (20 min) ---
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def add_to_wishlist(request, product_id):
     """Add product to wishlist."""
     product = get_object_or_404(Product, id=product_id)
@@ -741,7 +740,7 @@ def add_to_wishlist(request, product_id):
     return redirect('product_detail_new', product_id=product_id)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def remove_from_wishlist(request, product_id):
     """Remove product from wishlist."""
     WishlistItem.objects.filter(
@@ -755,7 +754,7 @@ def remove_from_wishlist(request, product_id):
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def wishlist_view(request):
     """Display user's wishlist."""
     wishlist_items = WishlistItem.objects.filter(user=request.user).select_related('product')
@@ -770,7 +769,7 @@ def wishlist_view(request):
     return render(request, 'wishlist.html', context)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def move_to_cart(request, product_id):
     """Move wishlist item to cart."""
     product = get_object_or_404(Product, id=product_id)
@@ -786,7 +785,7 @@ def move_to_cart(request, product_id):
 
 
 # --- FEATURE 4: ADVANCED CART SYSTEM (25 min) ---
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def cart_view_new(request):
     """Premium shopping cart with coupon application."""
     cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -828,7 +827,7 @@ def cart_view_new(request):
     return render(request, 'cart.html', context)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def update_cart_quantity(request, item_id):
     """Update quantity of item in cart."""
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
@@ -850,7 +849,7 @@ def update_cart_quantity(request, item_id):
     return redirect('cart_view_new')
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def remove_cart_item(request, item_id):
     """Remove item from cart."""
     CartItem.objects.filter(id=item_id, cart__user=request.user).delete()
@@ -860,7 +859,7 @@ def remove_cart_item(request, item_id):
     return redirect('cart_view_new')
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def apply_coupon(request):
     """Apply coupon code to cart."""
     if request.method == 'POST':
@@ -888,7 +887,7 @@ def apply_coupon(request):
 
 
 # --- FEATURE 5: CUSTOMER DASHBOARD (30 min) ---
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def customer_dashboard(request):
     """Premium customer dashboard with orders, returns, and profile."""
     user = request.user
@@ -929,7 +928,7 @@ def customer_dashboard(request):
     return render(request, 'customer_dashboard.html', context)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def order_detail(request, order_id):
     """View full order details."""
     order = get_object_or_404(CartOrder, id=order_id, user=request.user)
@@ -944,7 +943,7 @@ def order_detail(request, order_id):
     return render(request, 'order_detail.html', context)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def request_refund(request, order_id):
     """Request refund for an order."""
     order = get_object_or_404(CartOrder, id=order_id, user=request.user)
@@ -966,7 +965,7 @@ def request_refund(request, order_id):
     return render(request, 'request_refund.html', context)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def update_profile(request):
     """Update customer profile information."""
     user = request.user
@@ -998,7 +997,7 @@ def update_profile(request):
 
 
 # --- SELLER PREMIUM FEATURES ---
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def seller_profile(request, seller_id):
     """View seller profile with products and ratings."""
     seller = get_object_or_404(User, id=seller_id, profile__user_type='seller')
@@ -1027,7 +1026,7 @@ def seller_profile(request, seller_id):
     return render(request, 'seller_profile.html', context)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def seller_dashboard(request):
     """Seller analytics and management dashboard."""
     if not request.user.profile.user_type == 'seller':
@@ -1065,7 +1064,7 @@ def seller_dashboard(request):
 
 
 # --- PAYMENT GATEWAY VIEWS ---
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 @csrf_protect
 def verify_razorpay(request):
     """
@@ -1149,7 +1148,7 @@ def verify_razorpay(request):
         }, status=500)
 
 
-@login_required(login_url='auth_view')
+@login_required(login_url='auth')
 def order_success(request):
     """
     Display order success page with invoice details and download options.
@@ -1195,3 +1194,4 @@ def order_success(request):
     }
     
     return render(request, 'order_success.html', context)
+
