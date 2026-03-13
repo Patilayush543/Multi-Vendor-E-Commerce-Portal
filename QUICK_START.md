@@ -194,7 +194,16 @@ Payment gateway works on mobile devices. Test with:
    ```env
    DJANGO_DEBUG=False
    ```
+6. **Create an admin user** (run once after deploying, or let the build script do it for you):
+   ```bash
+   python manage.py createsuperuser
+   # or use the helper:
+   python create_admin.py
+   # credentials can be customized via ADMIN_USERNAME and ADMIN_PASSWORD env vars
+   ```
 
+   The `build.sh` script now automatically invokes `create_admin.py`, so a superuser
+   is guaranteed to exist on every deployment (default 'ayush' / 'Pass@123').
 5. **Test Again**:
    - Test with small amount
    - Test refund process

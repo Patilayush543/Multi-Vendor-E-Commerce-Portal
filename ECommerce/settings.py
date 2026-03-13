@@ -10,13 +10,18 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-patilcraft-key-2026")
 # In production we explicitly disable debug and lock down hosts.
 DEBUG = False  # ensure this is off on Render
 
-# explicit allowed hosts including both old and new Render service domains plus locals
-ALLOWED_HOSTS = [
+DEFAULT_ALLOWED_HOSTS = [
     'patilcraft.onrender.com',
     'multi-vendor-e-commerce-portal-1.onrender.com',
+    'patilapx.tech',
+    'www.patilapx.tech',
     'localhost',
     '127.0.0.1',
 ]
+
+# Merge defaults with optional comma-separated ALLOWED_HOSTS from env.
+env_allowed_hosts = [h.strip() for h in os.getenv('ALLOWED_HOSTS', '').split(',') if h.strip()]
+ALLOWED_HOSTS = list(dict.fromkeys(DEFAULT_ALLOWED_HOSTS + env_allowed_hosts))
 
 # previous dynamic logic left for reference (commented out)
 # ALLOWED_HOSTS = [h for h in os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h]
@@ -25,17 +30,19 @@ ALLOWED_HOSTS = [
 # ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
 
 # --- CSRF Security Configuration ---
-# Only trust HTTPS origins of deployed sites (both old and new Render URL)
-CSRF_TRUSTED_ORIGINS = [
+DEFAULT_CSRF_TRUSTED_ORIGINS = [
     'https://patilcraft.onrender.com',
     'https://multi-vendor-e-commerce-portal-1.onrender.com',
+    'https://patilapx.tech',
+    'https://www.patilapx.tech',
 ]
+
+# Merge defaults with optional comma-separated CSRF_TRUSTED_ORIGINS from env.
+env_csrf_origins = [o.strip() for o in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()]
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(DEFAULT_CSRF_TRUSTED_ORIGINS + env_csrf_origins))
 
 # keep local dev origins if needed (commented)
 # CSRF_TRUSTED_ORIGINS += ['http://localhost:8000', 'http://127.0.0.1:8000']
-
-# dedupe
-CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(CSRF_TRUSTED_ORIGINS))
 
 # --- 2. APPS & MIDDLEWARE ---
 INSTALLED_APPS = [
@@ -252,6 +259,7 @@ else:
 # DEBUG is already False above, so this block will run in production
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 if not DEBUG:
     SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '3600'))
@@ -259,7 +267,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = os.getenv('SECURE_HSTS_PRELOAD', 'True').lower() in ('1', 'true', 'yes')
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False').lower() in ('1', 'true', 'yes')
+    SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'True').lower() in ('1', 'true', 'yes')
 
 # --- 12. RAZORPAY PAYMENT GATEWAY CONFIGURATION ---
 # Set these in environment variables (.env file or hosting platform)

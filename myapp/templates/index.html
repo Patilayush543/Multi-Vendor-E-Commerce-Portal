@@ -149,24 +149,24 @@
     </nav>
 
     <div class="cat-bar d-flex justify-content-center gap-3 flex-wrap">
-        <a href="/?cat=fashion" class="cat-item {% if cat == 'fashion' %}active{% endif %}">Fashion</a>
-        <a href="/?cat=tech" class="cat-item {% if cat == 'tech' %}active{% endif %}">Electronics</a>
-        <a href="/?cat=tech&sub=laptop" class="cat-item">Laptops</a>
-        <a href="/?cat=tech&sub=mobile" class="cat-item">Mobiles</a>
+        <a href="/?cat=fashion" class="cat-item {% if cat == 'fashion' %}active{% endif %}" onclick="switchHeroImage('fashion')">Fashion</a>
+        <a href="/?cat=tech" class="cat-item {% if cat == 'tech' %}active{% endif %}" onclick="switchHeroImage('tech')">Electronics</a>
+        <a href="/?cat=tech&sub=laptop" class="cat-item" onclick="switchHeroImage('tech'); return true;">Laptops</a>
+        <a href="/?cat=tech&sub=mobile" class="cat-item" onclick="switchHeroImage('tech'); return true;">Mobiles</a>
     </div>
 
     <main>
         <div class="container-fluid px-0">
             <div class="hero-banner">
-                <img src="{% static 'image/main.jpeg' %}" alt="PatilCraft Banner">
+                <img id="heroImage" src="{% static 'image/main.jpeg' %}" alt="PatilCraft Banner">
                 <div class="hero-overlay">
                     <div class="text-white">
                         <p class="text-uppercase fw-bold mb-2" style="letter-spacing: 4px; color: var(--accent);">Estd. 2025</p>
-                        <h1 class="hero-title">PatilCraft<br><span style="color: var(--accent);">Excellence.</span></h1>
-                        <p class="mt-4 fs-5 opacity-75">The e-commerce platform that cares.</p>
+                        <h1 class="hero-title" id="heroTitle">PatilCraft<br><span style="color: var(--accent);">Excellence.</span></h1>
+                        <p class="mt-4 fs-5 opacity-75" id="heroText">The e-commerce platform that cares.</p>
                         <div class="mt-5 d-flex gap-3">
-                            <button onclick="location.href='/?cat=fashion'" class="btn btn-light btn-lg rounded-pill px-5 fw-bold">Fashion</button>
-                            <button onclick="location.href='/?cat=tech'" class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">Tech</button>
+                            <button onclick="switchHeroImage('fashion')" class="btn btn-light btn-lg rounded-pill px-5 fw-bold">Fashion</button>
+                            <button onclick="switchHeroImage('tech')" class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">Tech</button>
                         </div>
                     </div>
                 </div>
@@ -229,9 +229,15 @@
                 <h5 class="fw-bold mb-4">Our Base</h5>
                 <p class="text-secondary">Mumbai University Hub<br>Parel, Mumbai, MH</p>
                 <div class="d-flex justify-content-md-end gap-3 mt-4">
-                    <i class="bi bi-instagram fs-4"></i>
-                    <i class="bi bi-twitter-x fs-4"></i>
-                    <i class="bi bi-linkedin fs-4"></i>
+                    <a href="https://www.instagram.com/yourprofile" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='white'">
+                        <i class="bi bi-instagram fs-4"></i>
+                    </a>
+                    <a href="https://x.com/yourprofile" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='white'">
+                        <i class="bi bi-twitter-x fs-4"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" style="color: white; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='#f39c12'" onmouseout="this.style.color='white'">
+                        <i class="bi bi-linkedin fs-4"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -243,5 +249,33 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Dynamic hero image and text switching based on category
+        function switchHeroImage(category) {
+            const heroImage = document.getElementById('heroImage');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroText = document.getElementById('heroText');
+            
+            if (category === 'fashion') {
+                heroImage.src = "{% static 'image/main.jpeg' %}";
+                heroTitle.innerHTML = "Fashion<br><span style='color: var(--accent);'>Trends.</span>";
+                heroText.textContent = "Discover the latest in style and elegance.";
+            } else if (category === 'tech') {
+                heroImage.src = "{% static 'image/tech-banner.jpeg' %}";
+                heroTitle.innerHTML = "Tech<br><span style='color: var(--accent);'>Innovation.</span>";
+                heroText.textContent = "Experience cutting-edge technology.";
+            }
+        }
+        
+        // Initialize hero image based on current category
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('cat');
+            if (category) {
+                switchHeroImage(category);
+            }
+        });
+    </script>
 </body>
 </html>
